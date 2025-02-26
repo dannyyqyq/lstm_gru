@@ -4,6 +4,11 @@ A simple LSTM-based next-word predictor trained on Shakespeare's *Hamlet*, with 
 
 This project uses a Long Short-Term Memory (LSTM) neural network to predict the next word in a text sequence. It’s trained on *Hamlet* from the NLTK Gutenberg corpus and deployed via a minimal Streamlit interface.
 
+## 🌐 Live Demo
+
+Try it out: [Next Word Prediction with LSTM](https://next-word-prediction-lstm-shakesphere.streamlit.app/)  
+Enter a sequence input and get a predicted next word based on the input!
+
 ## 🚀 Features
 - **Dataset**: *Hamlet* by Shakespeare (NLTK Gutenberg).
 - **Model**: LSTM with embedding, dropout, and dense layers.
