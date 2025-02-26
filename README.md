@@ -1,38 +1,51 @@
-# N-Gram Sequence Generation for LSTM Input
+# 📝 Next Word Prediction with LSTM
 
-## Code Overview
-This code generates input sequences (n-grams) from text for training an LSTM model, processing the text line by line.
+A simple LSTM-based next-word predictor trained on Shakespeare's *Hamlet*, with a Streamlit app for interactive use.
 
-```python
-input_sequences = []
-for line in text.split("\n"):
-    token_list = tokenizer.texts_to_sequences([line])[0]
-    for i in range(1, len(token_list)):
-        n_gram_sequence = token_list[:i+1]
-        input_sequences.append(n_gram_sequence)
+This project uses a Long Short-Term Memory (LSTM) neural network to predict the next word in a text sequence. It’s trained on *Hamlet* from the NLTK Gutenberg corpus and deployed via a minimal Streamlit interface.
+
+## 🚀 Features
+- **Dataset**: *Hamlet* by Shakespeare (NLTK Gutenberg).
+- **Model**: LSTM with embedding, dropout, and dense layers.
+- **App**: Streamlit frontend for real-time predictions.
+
+# 🔧 Installation & Setup
+
+### Prerequisites
+- Python 3.12
+- Git
+
+### 1️⃣ Clone the Repository
+```sh
+git clone https://github.com/dannyyqyq/lstm_gru
 ```
 
-## What It Does
-- **Splits Text**: Breaks `text` into lines using `\n`.
-- **Tokenizes**: Converts each line into a list of integers (`token_list`) using a `tokenizer`.
-- **Generates N-Grams**: For each `token_list`, creates subsequences starting with length 2 up to the full length.
-  - Example: `token_list = [5, 6, 7, 8]` → `[[5, 6], [5, 6, 7], [5, 6, 7, 8]]`.
-- **Stores**: Appends each n-gram to `input_sequences`.
+### 2️⃣ Install Dependencies
+```sh
+pip install -r requirements.txt
+```
 
-## Behavior Across Lines
-- **Restarts with 2-Grams**: For each new line, it begins anew with a 2-gram.
-  - After `[5, 6, 7, 8]` (e.g., "and then some cheese"), the next line (e.g., "now I want more" → `[9, 1, 10, 11]`) starts with `[9, 1]`, then builds to `[9, 1, 10]`, `[9, 1, 10, 11]`.
-- **No Continuity**: Lines are independent; no sequences like `[8, 9]` are created across lines.
+### 3️⃣ Run the App Locally
+```sh
+streamlit run app.py
+```
 
-## Example
-For `text = "I ate a samosa\nand then some cheese\nnow I want more"`:
-- Line 1: `[1, 2, 3, 4]` → `[[1, 2], [1, 2, 3], [1, 2, 3, 4]]`
-- Line 2: `[5, 6, 7, 8]` → `[[5, 6], [5, 6, 7], [5, 6, 7, 8]]`
-- Line 3: `[9, 1, 10, 11]` → `[[9, 1], [9, 1, 10], [9, 1, 10, 11]]`
+## 🧠 Model Details
+- **Architecture**:
+  - Embedding: 4,818 words → 100D vectors, input length = 13.
+  - LSTM: 150 units (sequence output), Dropout 0.2, LSTM 100 units (final output).
+  - Dense: 4,818 classes with softmax.
+- **Training**: 20 epochs, Adam optimizer, ~16% training accuracy, ~6% validation accuracy.
+- **Files**:
+  - `app.py`: Streamlit app.
+  - `next_word_lstm.keras`: Trained model.
+  - `tokenizer.pkl`: Tokenizer object.
+  - `training_notebook.ipynb`: Training script (optional).
 
-## Purpose for LSTM
-- Prepares data for sequence prediction (e.g., predict "6" given "5").
-- Each line’s sequences are separate training examples; LSTM learns patterns within lines, restarting memory per line.
+## 📋 How it works:
+- Input: "The sun is shining".
+- Output: "The next word could be: <prediction>" (e.g., "and").
 
-## Key Insight
-- After finishing a line (e.g., `[5, 6, 7, 8]`), it doesn’t bridge to the next (e.g., no `[8, 9]`). It resets to a 2-gram (e.g., `[9, 1]`) for the new line, building up again.
+## ⚠️ Limitations
+- Limited to *Hamlet*’s 4,818-word vocabulary; may predict `None` for out-of-vocab inputs.
+- Low accuracy due to sparse data and task complexity.
